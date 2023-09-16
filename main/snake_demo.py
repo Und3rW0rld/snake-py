@@ -13,7 +13,8 @@ SNAKE_COLOR = "#B5B2B2"
 FOOD_COLOR = "red"
 BACKGROUND_COLOR = "black"
 cont = 0
-PASOS = random.randint(1, 10)
+pasos = random.randint(1, 10)
+comida = True
 #Objetos
 class Snake:
 	def __init__(self):
@@ -38,8 +39,14 @@ class Food:
 
 #Funciones
 def next_turn(snake, food):
-	if cont == PASOS:
-		pass
+	global cont, pasos, comida
+	if comida == False:
+		cont += 1
+		if cont == pasos:
+			comida = True
+			food = Food()
+			paso = random.randint(1, 10)
+			cont = 0
 
 	x, y = snake.coordinates[0]
 	if direction == "up":
@@ -61,12 +68,11 @@ def next_turn(snake, food):
 	if x == food.coordinates[0] and y == food.coordinates[1]:
 		global score 
 		score += 1
-
+		comida = False
 		label.config(text = f"Score: {score}")
-
 		canvas.delete("food")
 
-		food = Food() 
+		 
 	else:
 		del snake.coordinates[-1]
 
@@ -84,19 +90,15 @@ def change_direction(new_direction):
 	global direction
 	if new_direction == 'left':
 		if direction != 'right':
-			time.sleep(150/1000)
 			direction = new_direction;
 	elif new_direction == 'right':
 		if direction != 'left':
-			time.sleep(150/1000)
 			direction = new_direction
 	elif new_direction == 'up':
 		if direction != 'down':
-			time.sleep(150/1000)
 			direction = new_direction
 	else:
 		if direction != 'up':
-			time.sleep(150/1000)
 			direction = new_direction
 
 def check_collisions():
