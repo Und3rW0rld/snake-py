@@ -10,8 +10,8 @@ SPEED = 150;
 SPACE_SIZE = 50;
 BODY_PARTS = 3
 SNAKE_COLOR = "#B5B2B2"
-FOOD_COLOR = "red"
-BACKGROUND_COLOR = "black"
+FOOD_COLOR = "black"
+BACKGROUND_COLOR = "white"
 cont = 0
 pasos = random.randint(1, 10)
 comida = True
@@ -95,11 +95,11 @@ def next_turn(snake, food):
 		canvas.delete(snake.squares[-1])
 
 		del snake.squares[-1]
-	for i in range(len(snake.squares)):
-		if i == 0: 
-			canvas.itemconfig(snake.squares[0], fill = "#4B4B4B")
-		else:
-			canvas.itemconfig(snake.squares[i], fill = SNAKE_COLOR)
+	
+	canvas.itemconfig(snake.squares[0], fill = "#4B4B4B")
+		
+	canvas.itemconfig(snake.squares[1], fill = SNAKE_COLOR)
+
 	if check_collisions(snake):
 		game_over()
 	else:
