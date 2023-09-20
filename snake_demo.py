@@ -129,13 +129,15 @@ def game_over():
 	restart_button.place(x=canvas.winfo_width()/2 - 60, y=canvas.winfo_height()/2 + 200)
 
 def restart_game():
-    global snake, food, score, direction
+    global snake, food, score, direction, new_direction
 
     # Reset game variables to initial values
+    new_direction = 'down'
     restart_button.place_forget()
     canvas.delete(ALL)
     snake = Snake()
     food = Food()
+    comida = True
     score = 0
     direction = 'down'
     label.config(text="Score:{}".format(score))
