@@ -1,7 +1,9 @@
 #Para crear la interfaz
 from tkinter import *
+from queue import Queue
 import time
 import random
+
 
 #Constantes
 GAME_WIDTH = 650
@@ -15,6 +17,7 @@ BACKGROUND_COLOR = "grey"
 cont = 0
 pasos = random.randint(1, 10)
 comida = True
+directions = Queue(maxsize=4)
 new_direction = ""
 #Objetos
 class Snake:
@@ -40,7 +43,11 @@ class Food:
 
 #Funciones
 def next_turn(snake, food):
-	global cont, pasos, comida, new_direction, direction
+	global cont, pasos, comida, new_direction, direction, directions
+
+	if not directions.empty():
+		new_direction = directions.get()
+		print(new_direction)
 
 	
 	if new_direction == 'left':
@@ -105,8 +112,10 @@ def next_turn(snake, food):
 		window.after(SPEED, next_turn, snake, food)
 
 def change_direction(nd):
-	global new_direction
-	new_direction = nd
+	global directions
+	if directions.full():
+		directions.get()
+	directions.put(nd)
 
 def check_collisions(snake):
 	x,y = snake.coordinates[0]
@@ -129,19 +138,20 @@ def game_over():
 	restart_button.place(x=canvas.winfo_width()/2 - 60, y=canvas.winfo_height()/2 + 200)
 
 def restart_game():
-    global snake, food, score, direction, new_direction, comida
+	global snake, food, score, direction, new_direction, comida
 
-    # Reset game variables to initial values
-    new_direction = 'up'
-    restart_button.place_forget()
-    canvas.delete(ALL)
-    snake = Snake()
-    food = Food()
-    comida = True
-    score = 0
-    direction = 'up'
-    label.config(text="Score:{}".format(score))
-    next_turn(snake, food)
+	new_direction = 'up'
+	restart_button.place_forget()
+	canvas.delete(ALL)
+	snake = Snake()
+	food = Food()
+	comida = True
+	score = 0
+	direction = 'up'
+	label.config(text="Score:{}".format(score))
+	while not directions.empty():
+		directions.get()
+	next_turn(snake, food)
 
 
 #Crear ventana
