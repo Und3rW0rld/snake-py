@@ -129,17 +129,17 @@ def game_over():
 	restart_button.place(x=canvas.winfo_width()/2 - 60, y=canvas.winfo_height()/2 + 200)
 
 def restart_game():
-    global snake, food, score, direction, new_direction
+    global snake, food, score, direction, new_direction, comida
 
     # Reset game variables to initial values
-    new_direction = 'down'
+    new_direction = 'up'
     restart_button.place_forget()
     canvas.delete(ALL)
     snake = Snake()
     food = Food()
     comida = True
     score = 0
-    direction = 'down'
+    direction = 'up'
     label.config(text="Score:{}".format(score))
     next_turn(snake, food)
 
@@ -154,7 +154,7 @@ window.resizable(False,False)
 #Inicializamos los puntos
 score = 0
 #Direccion inicial de la snake
-direction = 'down'
+direction = 'up'
 #Texto de los puntos en pantalla
 label = Label(window, text = f"Score: {score}", font = ('consolas', 20))
 label.pack()
@@ -180,12 +180,16 @@ window.geometry(f"{window_width}x{window_height}+{x}+{y-40}")
 
 window.bind('<Left>', lambda event: change_direction("left"))
 window.bind('a', lambda event: change_direction("left"))
+window.bind('A', lambda event: change_direction("left"))
 window.bind('<Right>', lambda event: change_direction("right"))
 window.bind('d', lambda event: change_direction("right"))
+window.bind('D', lambda event: change_direction("right"))
 window.bind('<Up>', lambda event: change_direction("up"))
 window.bind('w', lambda event: change_direction("up"))
+window.bind('W', lambda event: change_direction("up"))
 window.bind('<Down>', lambda event: change_direction("down"))
 window.bind('s', lambda event: change_direction("down"))
+window.bind('S', lambda event: change_direction("down"))
 
 
 snake = Snake()
