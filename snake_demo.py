@@ -42,9 +42,7 @@ class Snake:
 
 class Food:
     def __init__(self):
-        pos = random.randint(0, len(tablero)-1)
-        x = tablero[pos][0]
-        y = tablero[pos][1]
+        x, y = random.choice(tablero)
         canvas.create_oval(x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill=FOOD_COLOR, tag="food")
 
         self.coordinates = [x, y]
@@ -79,7 +77,6 @@ def next_turn(snake, food):
 			cont = 0
 
 	x, y = snake.coordinates[0]
-	tablero.remove([x,y])
 	if direction == "up":
 		y -= SPACE_SIZE
 	elif direction == "down":
@@ -95,6 +92,9 @@ def next_turn(snake, food):
 	square = canvas.create_rectangle(x, y, x +SPACE_SIZE, y+SPACE_SIZE, fill = SNAKE_COLOR)
 
 	snake.squares.insert(0, square)
+	for i in snake.coordinates:
+		if i in tablero:
+			tablero.remove(i)
 		#print(f"coordenadas snake {snake.coordinates[0]} coordenadas food {food.coordinates}")
 	if x == food.coordinates[0] and y == food.coordinates[1]:
 		global score 
@@ -113,6 +113,7 @@ def next_turn(snake, food):
 		del snake.squares[-1]
 	canvas.itemconfig(snake.squares[0], fill="#4B4B4B")
 	canvas.itemconfig(snake.squares[1], fill=SNAKE_COLOR)
+	
 
 	if check_collisions(snake):
 		game_over()
