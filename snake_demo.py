@@ -17,8 +17,14 @@ BACKGROUND_COLOR = "grey"
 cont = 0
 pasos = random.randint(1, 10)
 comida = True
+tablero = []
 directions = Queue(maxsize=4)
 new_direction = ""
+
+for i in range(13):
+	for j in range(13):
+		tablero.append([i * SPACE_SIZE, j * SPACE_SIZE])
+
 #Objetos
 class Snake:
 	def __init__(self):
@@ -35,19 +41,20 @@ class Snake:
 		canvas.itemconfig(self.squares[0], fill = "#4B4B4B")
 
 class Food:
-	def __init__(self):
-		x = random.randint(0, ((GAME_WIDTH / SPACE_SIZE)-1)) * SPACE_SIZE
-		y = random.randint(0, ((GAME_HEIGHT / SPACE_SIZE)-1)) * SPACE_SIZE
-		self.coordinates = [x,y]
-		canvas.create_oval(x,y,x+SPACE_SIZE, y+SPACE_SIZE, fill = FOOD_COLOR, tag = "food")
+    def __init__(self):
+        pos = random.randint(0, len(tablero)-1)
+        x = tablero[pos][0]
+        y = tablero[pos][1]
+        canvas.create_oval(x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill=FOOD_COLOR, tag="food")
+
+        self.coordinates = [x, y]
 
 #Funciones
 def next_turn(snake, food):
-	global cont, pasos, comida, new_direction, direction, directions
+	global cont, pasos, comida, new_direction, direction, directions, tablero
 
 	if not directions.empty():
 		new_direction = directions.get()
-		print(new_direction)
 
 	
 	if new_direction == 'left':
@@ -72,6 +79,7 @@ def next_turn(snake, food):
 			cont = 0
 
 	x, y = snake.coordinates[0]
+	tablero.remove([x,y])
 	if direction == "up":
 		y -= SPACE_SIZE
 	elif direction == "down":
@@ -82,7 +90,7 @@ def next_turn(snake, food):
 	elif direction == "right":
 		x += SPACE_SIZE
 
-	snake.coordinates.insert(0, (x,y))
+	snake.coordinates.insert(0, [x,y])
 
 	square = canvas.create_rectangle(x, y, x +SPACE_SIZE, y+SPACE_SIZE, fill = SNAKE_COLOR)
 
@@ -97,12 +105,12 @@ def next_turn(snake, food):
 
 			 
 	else:
+		tablero.append(snake.coordinates[-1])
 		del snake.coordinates[-1]
 
 		canvas.delete(snake.squares[-1])
 
 		del snake.squares[-1]
-	
 	canvas.itemconfig(snake.squares[0], fill="#4B4B4B")
 	canvas.itemconfig(snake.squares[1], fill=SNAKE_COLOR)
 
@@ -138,7 +146,7 @@ def game_over():
 	restart_button.place(x=canvas.winfo_width()/2 - 60, y=canvas.winfo_height()/2 + 200)
 
 def restart_game():
-	global snake, food, score, direction, new_direction, comida
+	global snake, food, score, direction, new_direction, comida, tablero
 
 	new_direction = 'up'
 	restart_button.place_forget()
@@ -147,6 +155,11 @@ def restart_game():
 	food = Food()
 	comida = True
 	score = 0
+	tablero = []
+	for i in range(13):
+		for j in range(13):
+			tablero.append([i * SPACE_SIZE, j * SPACE_SIZE])
+
 	direction = 'up'
 	label.config(text="Score:{}".format(score))
 	while not directions.empty():
